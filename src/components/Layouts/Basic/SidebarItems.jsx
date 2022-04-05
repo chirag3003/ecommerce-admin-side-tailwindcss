@@ -14,7 +14,7 @@ function classNames(...classes) {
 function SidebarItems() {
     return (
         <>
-            {sidebarConfig.map((item) => {
+            {sidebarConfig.map((item,index) => {
                 if (item.list) {
 
                     return (
@@ -39,8 +39,8 @@ function SidebarItems() {
                                         />
                                     </Disclosure.Button>
                                     {item.list.map((item, index) => (
-                                        <a href={item.href}>
-                                            <Disclosure.Panel key={index} className={classNames(
+                                        <a key={index} href={item.href}>
+                                            <Disclosure.Panel className={classNames(
                                                 false ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                                                 'group flex items-center     px-6 py-2 text-base font-medium rounded-md'
                                             )}>
@@ -63,7 +63,7 @@ function SidebarItems() {
                 }
                 return (
                     <a
-                        key={item.name}
+                        key={index}
                         href={item.href}
                         className={classNames(
                             item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',

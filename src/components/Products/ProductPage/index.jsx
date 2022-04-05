@@ -41,9 +41,8 @@ function classNames(...classes) {
 }
 
 export default function ProductPage() {
-    const [selectedSize, setSelectedSize] = useState(productData.sizes[2])
     const [product, setProduct] = useState(productData)
-    // console.log(product)
+    console.log(product)
 
 
     // Highlights Event Handlers
@@ -63,10 +62,21 @@ export default function ProductPage() {
         })
     }
 
+    function updateHighlight(index) {
+        return (evt) => {
+            const {value} = evt.target
+            let newHighlights = [...product.highlights];
+            newHighlights[index] = value
+            setProduct({
+                ...product,
+                highlights: newHighlights
+            })
+        }
+    }
+
 
     //Size Event Handlers
     function changeSize(evt) {
-
         let index = Number(evt.target.dataset.index)
         let newSizes = [...product.sizes]
         newSizes[index].inStock = !product.sizes[index].inStock
@@ -77,7 +87,11 @@ export default function ProductPage() {
     }
 
     function changeInput(evt) {
-
+        const {name, value} = evt.target;
+        setProduct({
+            ...product,
+            [name]: value
+        })
     }
 
     return (<div className="bg-white">
@@ -96,7 +110,12 @@ export default function ProductPage() {
             <div
                 className="max-w-2xl mx-auto pt-10 pb-16 px-4 sm:px-6 lg:max-w-7xl lg:pt-16 lg:pb-24 lg:px-8 lg:grid lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8">
                 <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
-                    <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">{product.name}</h1>
+                    <input
+                        onChange={changeInput}
+                        type="text"
+                        name="name" className="w-full border-gray-300 rounded-md shadow text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl"
+                        value={product.name}
+                    />
                 </div>
 
                 {/* Options */}
@@ -197,10 +216,10 @@ export default function ProductPage() {
                             <ul role="list" className="pl-4 list-disc text-sm space-y-2">
                                 {product.highlights.map((highlight, index) => (
                                     <div key={index} className={"flex justify-between align-middle p-2"}>
-                                        <li className="text-gray-400">
+                                        <li className="flex-1 text-gray-400">
                                             <input
-                                                onChange={changeInput}
-                                                className=" text-gray-600 w-full p-1 focus:outline-none"
+                                                onChange={updateHighlight(index)}
+                                                className="w-full text-gray-600 w-full p-1 focus:outline-none"
                                                 value={highlight}/>
                                         </li>
                                         <button onClick={removeHighlight(index)}
