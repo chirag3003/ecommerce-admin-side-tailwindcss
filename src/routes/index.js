@@ -1,7 +1,7 @@
 import Home from "@/Home"
 import ListProducts from "@/Products/ListProducts";
 
-import {HOME, LIST_PRODUCTS, PRODUCT_PAGE} from "./path"
+import {CREATE_PRODUCT, HOME, LIST_PRODUCTS, PRODUCT_PAGE} from "./path"
 import ProductPage from "@/Products/ProductPage";
 
 
@@ -17,5 +17,12 @@ export default [
     {
         route: PRODUCT_PAGE,
         component: ProductPage,
+    },
+    {
+        route: CREATE_PRODUCT,
+        component: ProductPage,
+        props:{
+            create:true
+        }
     }
 ]

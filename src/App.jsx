@@ -12,7 +12,7 @@ function App() {
                 <BasicLayout>
                     <Routes>
                         {routes.map((route, index) => {
-                            return <Route key={index} path={route.route} element={<route.component />} />
+                            return <Route key={index} path={route.route} element={<route.component  {...route.props} />} />
                         })}
                     </Routes>
                 </BasicLayout>
