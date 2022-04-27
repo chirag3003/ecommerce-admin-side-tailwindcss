@@ -1,9 +1,10 @@
 import React from 'react';
-import {StarIcon} from "@heroicons/react/solid";
+import { StarIcon } from "@heroicons/react/solid";
+
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
-function Reviews({reviews}) {
+function Reviews({ reviews }) {
     return (
         <div className="mt-6">
             <h3 className="sr-only">Reviews</h3>
