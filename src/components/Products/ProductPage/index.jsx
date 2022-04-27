@@ -1,75 +1,28 @@
-import React, { useState } from "react";
-import { XIcon } from "@heroicons/react/solid";
+import React, { useState, useContext, useEffect } from "react";
+import { XCircleIcon, XIcon } from "@heroicons/react/solid";
 import { LIST_PRODUCTS } from "@routes/path";
 import ImageGallery from "@/Products/ProductPage/ImageGallery";
 import Reviews from "@/Products/ProductPage/Reviews";
 import { PlusIcon } from "@heroicons/react/outline";
 import { Minus } from "react-feather";
-import Axios from "@helpers/Axios";
-const productData = {
-    title: "Basic Tee 6-Pack",
-    price: "192",
-    images: [
-        {
-            src: "https://tailwindui.com/img/ecommerce-images/product-page-02-secondary-product-shot.jpg",
-            alt: "Two each of gray, white, and black shirts laying flat.",
-        },
-        {
-            src: "https://tailwindui.com/img/ecommerce-images/product-page-02-tertiary-product-shot-01.jpg",
-            alt: "Model wearing plain black basic tee.",
-        },
-        {
-            src: "https://tailwindui.com/img/ecommerce-images/product-page-02-tertiary-product-shot-02.jpg",
-            alt: "Model wearing plain gray basic tee.",
-        },
-        {
-            src: "https://tailwindui.com/img/ecommerce-images/product-page-02-featured-product-shot.jpg",
-            alt: "Model wearing plain white basic tee.",
-        },
-    ],
-    sizes: [
-        { name: "XXS", inStock: false, stock: 0 },
-        { name: "XS", inStock: true, stock: 1 },
-        { name: "S", inStock: true, stock: 1 },
-        { name: "M", inStock: true, stock: 1 },
-        { name: "L", inStock: true, stock: 1 },
-        { name: "XL", inStock: true, stock: 1 },
-        { name: "2XL", inStock: true, stock: 1 },
-        { name: "3XL", inStock: true, stock: 1 },
-    ],
-    description:
-        'The Basic Tee 6-Pack allows you to fully express your vibrant personality with three grayscale options. Feeling adventurous? Put on a heather gray tee. Want to be a trendsetter? Try our exclusive colorway: "Black". Need to add an extra pop of color to your outfit? Our white tee has you covered.',
-    highlights: [
-        "Hand cut and sewn locally",
-        "Dyed with our proprietary colors",
-        "Pre-washed & pre-shrunk",
-        "Ultra-soft 100% cotton",
-    ],
-    details:
-        'The 6-Pack includes two black, two white, and two heather gray Basic Tees. Sign up for our subscription service and be the first to get new, exciting colors, like our upcoming "Charcoal Gray" limited release.',
-    slug: "",
-};
+import Auth from "@helpers/Auth";
+import { useParams } from "react-router-dom";
+import SuccessfulRequestAlert from "@/SuccesfulRequestAlert";
+
 const createProductData = {
+    _id: "",
     title: "",
-    price: "",
+    price: 0,
     images: [],
     sizes: [
         { name: "XXS", inStock: false, stock: 0 },
         { name: "XS", inStock: false, stock: 0 },
         { name: "S", inStock: false, stock: 0 },
-        {
-            name: "M",
-            inStock: false,
-            stock: 0,
-        },
+        { name: "M", inStock: false, stock: 0 },
         { name: "L", inStock: false, stock: 0 },
         { name: "XL", inStock: false, stock: 0 },
         { name: "2XL", inStock: false, stock: 0 },
-        {
-            name: "3XL",
-            inStock: false,
-            stock: 0,
-        },
+        { name: "3XL", inStock: false, stock: 0 },
     ],
     description: "",
     highlights: [""],
@@ -84,15 +37,18 @@ function classNames(...classes) {
 }
 
 export default function ProductPage({ create }) {
-    const [product, setProduct] = useState(
-        create ? createProductData : productData
-    );
+    const auth = useContext(Auth);
+    const params = useParams();
+
+    const [product, setProduct] = useState(createProductData);
     const [selectedSize, setSelectedSize] = useState({
         name: "",
         inStock: false,
         stock: 0,
         index: -1,
     });
+    const [errros, setErrors] = useState([]);
+    const [successOpen, setSuccessOpen] = useState(false);
 
     // Highlights Event Handlers
     function addHighlight() {
@@ -146,32 +102,68 @@ export default function ProductPage({ create }) {
     }
 
     function changeInput(evt) {
-        const { name, value } = evt.target;
+        const { name, value, type } = evt.target;
         setProduct({
             ...product,
-            [name]: value,
+            [name]: type === "number" ? Number(value) : value,
         });
     }
 
     //Image Event Handlers
     function setImage(index, url) {
         let images = product.images;
-        images[index] = {
-            src: url,
-        };
+        images[index] = url;
         setProduct({
             ...product,
             images,
         });
     }
+    //Error Handler
+    async function validateInput() {
+        let errs = [];
+        if (product.title.trim().length < 3)
+            errs.push("Title should have minimum three characters");
+        if (product.slug.trim().length < 3)
+            errs.push("Title should have minimum three characters");
+
+        if (errs.length != 0) {
+            setErrors(errs);
+            closeError();
+            return false;
+        }
+        return true;
+    }
+    async function closeError(time = 5000) {
+        setTimeout(() => {
+            setErrors([]);
+        }, time);
+    }
 
     //Api related functions
-    function AddProduct() {
-        Axios.get("/", (res) => console.log(res));
+    async function UpdateProduct() {
+        if (!(await validateInput())) return;
+        await (create ? auth.Axios.post : auth.Axios.put)(
+            create ? "/products" : `/products/${product._id}`,
+            product
+        )
+            .then(() => {
+                setSuccessOpen(true);
+            })
+            .catch((err) => {
+                if (err.response.data === "slug already in use") {
+                    setErrors([err.response.data]);
+                    closeError();
+                }
+            });
     }
-    function UpdateProduct() {
-        Axios.get("/", (res) => console.log(res));
-    }
+
+    useEffect(() => {
+        auth.Axios.get(`/products/${params.slug}`)
+            .then((res) => {
+                setProduct(res.data);
+            })
+            .catch(console.error);
+    }, [params?.slug]);
 
     return (
         <div className="bg-white">
@@ -198,7 +190,8 @@ export default function ProductPage({ create }) {
                         <input
                             onChange={changeInput}
                             type="text"
-                            name="name"
+                            name="title"
+                            placeholder="Title"
                             className="w-full border-gray-300 rounded-md shadow text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl"
                             value={product.title}
                         />
@@ -222,9 +215,11 @@ export default function ProductPage({ create }) {
                                 </div>
                                 <input
                                     onChange={changeInput}
+                                    value={product.price}
                                     type="number"
                                     name="price"
                                     id="price"
+                                    min={0}
                                     className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md"
                                     placeholder="0.00"
                                     aria-describedby="price-currency"
@@ -323,7 +318,7 @@ export default function ProductPage({ create }) {
                             <button
                                 type="submit"
                                 className="mt-10 w-full bg-indigo-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                onClick={create ? AddProduct : UpdateProduct}
+                                onClick={UpdateProduct}
                             >
                                 {create ? "Add Product" : "Update"}
                             </button>
@@ -342,6 +337,8 @@ export default function ProductPage({ create }) {
                             </label>
                             <div className="space-y-6 mt-2 ">
                                 <textarea
+                                    onChange={changeInput}
+                                    value={product.description}
                                     rows={4}
                                     name="description"
                                     id="description"
@@ -422,6 +419,8 @@ export default function ProductPage({ create }) {
                             </label>
                             <div className="space-y-6 mt-2">
                                 <textarea
+                                    onChange={changeInput}
+                                    value={product.details}
                                     rows={4}
                                     name="details"
                                     id="details"
@@ -433,6 +432,41 @@ export default function ProductPage({ create }) {
                     </div>
                 </div>
             </div>
+            <div
+                className={classNames(
+                    "rounded-md fixed bottom-2 right-2 ml-2 bg-red-50 p-4",
+                    errros.length == 0 ? "hidden" : ""
+                )}
+            >
+                <div className="flex">
+                    <div className="flex-shrink-0">
+                        <XCircleIcon
+                            className="h-5 w-5 text-red-400"
+                            aria-hidden="true"
+                        />
+                    </div>
+                    <div className="ml-3">
+                        <h3 className="text-sm font-medium text-red-800">
+                            There were errors with your submission
+                        </h3>
+                        <div className="mt-2 text-sm text-red-700">
+                            <ul
+                                role="list"
+                                className="list-disc pl-5 space-y-1"
+                            >
+                                {errros.map((error, index) => {
+                                    return <li key={index}>{error}</li>;
+                                })}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <SuccessfulRequestAlert
+                open={successOpen}
+                setOpen={setSuccessOpen}
+                message={"Product added/updated succesfully"}
+            />
         </div>
     );
 }
