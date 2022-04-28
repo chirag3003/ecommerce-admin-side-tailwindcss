@@ -1,8 +1,7 @@
 import React from "react";
-import BasicLayout from "./components/Layouts/Basic";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import routes from "./routes";
+import { BrowserRouter } from "react-router-dom";
 import AuthContext from "@helpers/Auth/AuthContext";
+import Routes from "@routes/index";
 
 function App() {
     let a = "";
@@ -10,21 +9,7 @@ function App() {
         <div className="App">
             <AuthContext>
                 <BrowserRouter>
-                    <BasicLayout>
-                        <Routes>
-                            {routes.map((route, index) => {
-                                return (
-                                    <Route
-                                        key={index}
-                                        path={route.route}
-                                        element={
-                                            <route.component {...route.props} />
-                                        }
-                                    />
-                                );
-                            })}
-                        </Routes>
-                    </BasicLayout>
+                    <Routes />
                 </BrowserRouter>
             </AuthContext>
         </div>

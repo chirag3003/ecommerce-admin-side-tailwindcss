@@ -8,6 +8,8 @@ const getLocalJWT = () => {
         const jwt = localStorage.getItem("jwt");
         if (jwt === null) {
             return null;
+        } else if (jwt === "null") {
+            return null;
         } else {
             return jwt;
         }
@@ -30,11 +32,20 @@ function AuthContext({ children }) {
     const [jwt, setJwt] = useState(getLocalJWT());
     const [user, setUser] = useState({});
 
-    const login = () => {};
-    const logout = () => {};
+    const login = async ({ email, password }) => {
+        const res = await Axios.post("/user/login", { email, password }).catch(
+            (err) => console.error(err)
+        );
+        if (res.status === 200 && res.data) {
+            setJwt(res.data);
+        }
+    };
+    const logout = () => {
+        setJwt(null);
+    };
 
     useEffect(() => {
-        if (!jwt || jwt == "") {
+        if (!jwt || jwt == "" || jwt === null) {
             setUser(null);
             setLocalJwt(null);
             return;

@@ -4,7 +4,7 @@ import { createContext } from "react";
 const authContext = createContext({
     jwt: null,
     user: null,
-    login: () => {},
+    login: async ({ email = "", password = "" }) => {},
     logout: () => {},
     Axios: Axios,
 });
