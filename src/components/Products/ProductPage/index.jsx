@@ -8,6 +8,7 @@ import { Minus } from "react-feather";
 import Auth from "@helpers/Auth";
 import { useParams } from "react-router-dom";
 import SuccessfulRequestAlert from "@/SuccesfulRequestAlert";
+import { Switch } from "@headlessui/react";
 
 const createProductData = {
     _id: "",
@@ -47,6 +48,7 @@ export default function ProductPage({ create }) {
         stock: 0,
         index: -1,
     });
+    const [productPublic, setPublic] = useState(false);
     const [errros, setErrors] = useState([]);
     const [successOpen, setSuccessOpen] = useState(false);
 
@@ -158,19 +160,27 @@ export default function ProductPage({ create }) {
     }
 
     useEffect(() => {
+        if (!params.slug) return;
         auth.Axios.get(`/products/${params.slug}`)
             .then((res) => {
                 setProduct(res.data);
+                setPublic(res.data.public);
             })
             .catch(console.error);
     }, [params?.slug]);
+    useEffect(() => {
+        if (!product || !product.slug || create) return;
+        auth.Axios.patch(`/products/${product._id}`, {
+            public: productPublic,
+        }).catch((err) => console.error(err));
+    }, [productPublic]);
 
     return (
         <div className="bg-white">
             <div className="pt-6">
                 <nav
                     className={
-                        "max-w-2xl mx-auto sm:px-6 lg:max-w-7xl lg:px-8 "
+                        "max-w-2xl  sm:px-6 lg:max-w-7xl lg:px-8 flex justify-between "
                     }
                 >
                     <a href={LIST_PRODUCTS}>
@@ -180,6 +190,27 @@ export default function ProductPage({ create }) {
                             <XIcon className={"text-black w-6 h-6"} />
                         </button>
                     </a>
+                    <div className="public">
+                        <Switch
+                            checked={productPublic}
+                            onChange={setPublic}
+                            className={classNames(
+                                productPublic ? "bg-indigo-600" : "bg-gray-200",
+                                "relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            )}
+                        >
+                            <span className="sr-only">Use setting</span>
+                            <span
+                                aria-hidden="true"
+                                className={classNames(
+                                    productPublic
+                                        ? "translate-x-5"
+                                        : "translate-x-0",
+                                    "pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform ring-0 transition ease-in-out duration-200"
+                                )}
+                            />
+                        </Switch>
+                    </div>
                 </nav>
 
                 {/* Image gallery */}
@@ -343,7 +374,6 @@ export default function ProductPage({ create }) {
                                     name="description"
                                     id="description"
                                     className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                                    defaultValue={product.description}
                                 />
                             </div>
                         </div>
@@ -425,7 +455,6 @@ export default function ProductPage({ create }) {
                                     name="details"
                                     id="details"
                                     className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-                                    defaultValue={product.details}
                                 />
                             </div>
                         </div>

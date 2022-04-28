@@ -1,18 +1,24 @@
-import Home from "@/Home"
+import Home from "@/Home";
 import ListProducts from "@/Products/ListProducts";
-
-import {CREATE_PRODUCT, HOME, LIST_PRODUCTS, PRODUCT_PAGE} from "./path"
 import ProductPage from "@/Products/ProductPage";
+import StockList from "@/Products/StockList";
 
+import {
+    CREATE_PRODUCT,
+    HOME,
+    LIST_PRODUCTS,
+    PRODUCT_PAGE,
+    STOCK_LIST,
+} from "./path";
 
 export default [
     {
         route: HOME,
-        component: Home
+        component: Home,
     },
     {
-        route:LIST_PRODUCTS,
-        component:ListProducts
+        route: LIST_PRODUCTS,
+        component: ListProducts,
     },
     {
         route: PRODUCT_PAGE,
@@ -21,8 +27,12 @@ export default [
     {
         route: CREATE_PRODUCT,
         component: ProductPage,
-        props:{
-            create:true
-        }
-    }
-]
+        props: {
+            create: true,
+        },
+    },
+    {
+        route: STOCK_LIST,
+        component: StockList,
+    },
+];

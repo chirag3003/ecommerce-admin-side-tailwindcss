@@ -1,18 +1,50 @@
-import React from 'react';
-import { ArrowSmDownIcon, ArrowSmUpIcon } from '@heroicons/react/solid'
-import {  UsersIcon, CashIcon,ClipboardListIcon } from '@heroicons/react/outline'
+import React from "react";
+import { ArrowSmDownIcon, ArrowSmUpIcon } from "@heroicons/react/solid";
+import {
+    UsersIcon,
+    CashIcon,
+    ClipboardListIcon,
+} from "@heroicons/react/outline";
 import StatCard from "./StatCard";
 import Divider from "@/Divider";
 
 const stats = [
-    { id: 1, name: 'Total Revenue', stat: '71,897', icon: CashIcon, change: '122', changeType: 'increase' },
-    { id: 2, name: 'Total Orders', stat: '58.16%', icon: UsersIcon, change: '5.4%', changeType: 'increase' },
-    { id: 3, name: 'Total Revenue (Today)', stat: '24.57%', icon: CashIcon, change: '3.2%', changeType: 'decrease' },
-    { id: 3, name: 'Total Orders (Today)', stat: '24.57%', icon: ClipboardListIcon  , change: '3.2%', changeType: 'decrease' },
-]
+    {
+        id: 1,
+        name: "Total Revenue",
+        stat: "71,897",
+        icon: CashIcon,
+        change: "122",
+        changeType: "increase",
+    },
+    {
+        id: 2,
+        name: "Total Orders",
+        stat: "58.16%",
+        icon: UsersIcon,
+        change: "5.4%",
+        changeType: "increase",
+    },
+    {
+        id: 3,
+        name: "Total Revenue (Today)",
+        stat: "24.57%",
+        icon: CashIcon,
+        change: "3.2%",
+        changeType: "decrease",
+    },
+    {
+        id: 4,
+        name: "Total Orders (Today)",
+        stat: "24.57%",
+        icon: ClipboardListIcon,
+        change: "3.2%",
+        changeType: "decrease",
+    },
+];
 
 function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
+    return classes.filter(Boolean).join(" ");
 }
 
 function Home() {
@@ -24,8 +56,7 @@ function Home() {
                     <StatCard key={item.id} item={item} />
                 ))}
             </dl>
-            <Divider/>
-
+            <Divider />
         </div>
     );
 }
