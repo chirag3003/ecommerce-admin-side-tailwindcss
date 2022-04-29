@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import _ from "lodash";
 import { XCircleIcon, XIcon } from "@heroicons/react/solid";
 import { LIST_PRODUCTS } from "@routes/path";
 import ImageGallery from "@/Products/ProductPage/ImageGallery";
@@ -151,9 +152,12 @@ export default function ProductPage({ create }) {
     //Api related functions
     async function UpdateProduct() {
         if (!(await validateInput())) return;
+        let productData = { ...product };
+        productData.slug = _.kebabCase(product.slug);
+        setProduct(productData);
         await (create ? auth.Axios.post : auth.Axios.put)(
             create ? "/products" : `/products/${product._id}`,
-            product
+            productData
         )
             .then(() => {
                 setSuccessOpen(true);
