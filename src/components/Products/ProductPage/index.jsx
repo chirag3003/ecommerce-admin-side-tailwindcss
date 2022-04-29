@@ -6,9 +6,12 @@ import Reviews from "@/Products/ProductPage/Reviews";
 import { PlusIcon } from "@heroicons/react/outline";
 import { Minus } from "react-feather";
 import Auth from "@helpers/Auth";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import SuccessfulRequestAlert from "@/SuccesfulRequestAlert";
 import { Switch } from "@headlessui/react";
+import DeleteModal from "./DeleteModal";
+import ReactTagInput from "@pathofdev/react-tag-input";
+import "@pathofdev/react-tag-input/build/index.css";
 
 const createProductData = {
     _id: "",
@@ -25,6 +28,8 @@ const createProductData = {
         { name: "2XL", inStock: false, stock: 0 },
         { name: "3XL", inStock: false, stock: 0 },
     ],
+    tags: [],
+    collection: [],
     description: "",
     highlights: [""],
     details: "",
@@ -40,6 +45,7 @@ function classNames(...classes) {
 export default function ProductPage({ create }) {
     const auth = useContext(Auth);
     const params = useParams();
+    const navigate = useNavigate();
 
     const [product, setProduct] = useState(createProductData);
     const [selectedSize, setSelectedSize] = useState({
@@ -49,6 +55,7 @@ export default function ProductPage({ create }) {
         index: -1,
     });
     const [productPublic, setPublic] = useState(false);
+    const [deleteOpen, setDeleteOpen] = useState(false);
     const [errros, setErrors] = useState([]);
     const [successOpen, setSuccessOpen] = useState(false);
 
@@ -150,6 +157,7 @@ export default function ProductPage({ create }) {
         )
             .then(() => {
                 setSuccessOpen(true);
+                if (create) setProduct(createProductData);
             })
             .catch((err) => {
                 if (err.response.data === "slug already in use") {
@@ -158,8 +166,20 @@ export default function ProductPage({ create }) {
                 }
             });
     }
+    const deleteProduct = () => {
+        auth.Axios.delete(`/products/${product._id}`)
+            .then((res) => {
+                navigate("/products", { replace: true });
+            })
+            .catch((err) => {
+                setDeleteOpen(false);
+                setErrors(["Error while deleting the product"]);
+                closeError();
+            });
+    };
 
     useEffect(() => {
+        if (create) setProduct(createProductData);
         if (!params.slug) return;
         auth.Axios.get(`/products/${params.slug}`)
             .then((res) => {
@@ -167,7 +187,7 @@ export default function ProductPage({ create }) {
                 setPublic(res.data.public);
             })
             .catch(console.error);
-    }, [params?.slug]);
+    }, [params?.slug, create]);
     useEffect(() => {
         if (!product || !product.slug || create) return;
         auth.Axios.patch(`/products/${product._id}`, {
@@ -353,6 +373,17 @@ export default function ProductPage({ create }) {
                             >
                                 {create ? "Add Product" : "Update"}
                             </button>
+                            {!create && (
+                                <button
+                                    type="submit"
+                                    className="mt-2 w-full bg-red-600 border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                    onClick={() => {
+                                        setDeleteOpen(true);
+                                    }}
+                                >
+                                    Delete
+                                </button>
+                            )}
                         </div>
                     </div>
 
@@ -458,6 +489,50 @@ export default function ProductPage({ create }) {
                                 />
                             </div>
                         </div>
+                        <div className="mt-5">
+                            <h2 className="sr-only">Details</h2>
+
+                            <label
+                                htmlFor="tags"
+                                className="text-md font-medium text-gray-900"
+                            >
+                                Tags
+                            </label>
+                            <div className="mt-2">
+                                <ReactTagInput
+                                    id="tags"
+                                    tags={product.tags}
+                                    onChange={(newTags) => {
+                                        setProduct({
+                                            ...product,
+                                            tags: newTags,
+                                        });
+                                    }}
+                                />
+                            </div>
+                        </div>
+                        <div className="mt-5">
+                            <h2 className="sr-only">Details</h2>
+
+                            <label
+                                htmlFor="collection"
+                                className="text-md font-medium text-gray-900"
+                            >
+                                Collection
+                            </label>
+                            <div className="mt-2">
+                                <ReactTagInput
+                                    id="tags"
+                                    tags={product.collection}
+                                    onChange={(newTags) => {
+                                        setProduct({
+                                            ...product,
+                                            collection: newTags,
+                                        });
+                                    }}
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -495,6 +570,11 @@ export default function ProductPage({ create }) {
                 open={successOpen}
                 setOpen={setSuccessOpen}
                 message={"Product added/updated succesfully"}
+            />
+            <DeleteModal
+                open={deleteOpen}
+                setOpen={setDeleteOpen}
+                onDelete={deleteProduct}
             />
         </div>
     );
