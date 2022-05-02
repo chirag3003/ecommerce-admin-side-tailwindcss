@@ -1,20 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
 import Auth from "@helpers/Auth";
+import Design from "./Design";
 
 function StockList() {
     const auth = useContext(Auth);
     const [products, setProducts] = useState([]);
-    const people = [
-        {
-            name: "Lindsay Walton",
-            title: "Front-end Developer",
-            email: "lindsay.walton@example.com",
-            role: "Member",
-        },
-    ];
 
     useEffect(() => {
         auth.Axios.get("/products").then((res) => {
+            console.log(res.data);
             setProducts(res.data);
         });
     }, []);
@@ -65,14 +59,9 @@ function StockList() {
                                                 scope="col"
                                                 className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                                             >
-                                                XXS
+                                                Design ID
                                             </th>
-                                            <th
-                                                scope="col"
-                                                className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                                            >
-                                                XS
-                                            </th>
+
                                             <th
                                                 scope="col"
                                                 className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
@@ -122,11 +111,21 @@ function StockList() {
                                                 }
                                             >
                                                 <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
-                                                    {product.title}
+                                                    <a
+                                                        href={`/products/${product.slug}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                    >
+                                                        {product.title}
+                                                    </a>
                                                 </td>
                                                 <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                     {product.slug}
                                                 </td>
+                                                <Design
+                                                    designID={product.designID}
+                                                    image={product.images[0]}
+                                                />
                                                 {product.sizes.map(
                                                     (size, index) => {
                                                         return (
