@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import _ from "lodash";
+import _, { size } from "lodash";
 import { XCircleIcon, XIcon } from "@heroicons/react/solid";
 import { LIST_PRODUCTS } from "@routes/path";
 import ImageGallery from "@/Products/ProductPage/ImageGallery";
@@ -20,8 +20,8 @@ const createProductData = {
     price: 0,
     images: [],
     sizes: [
-        { name: "XXS", inStock: false, stock: 0 },
-        { name: "XS", inStock: false, stock: 0 },
+        // { name: "XXS", inStock: false, stock: 0 },
+        // { name: "XS", inStock: false, stock: 0 },
         { name: "S", inStock: false, stock: 0 },
         { name: "M", inStock: false, stock: 0 },
         { name: "L", inStock: false, stock: 0 },
@@ -35,12 +35,18 @@ const createProductData = {
     highlights: [""],
     details: "",
     slug: "",
+    designID:"",
 };
 
 const reviews = { href: "#", average: 4, totalCount: 117 };
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
+}
+let sizes = ["S","M","L","XL","2XL","3XL"]
+let sizeValue = [36,38,40,42,44,46]
+function getSizeValue(name){
+    return sizeValue[sizes.indexOf(name)]
 }
 
 export default function ProductPage({ create }) {
@@ -199,6 +205,7 @@ export default function ProductPage({ create }) {
         }).catch((err) => console.error(err));
     }, [productPublic]);
 
+
     return (
         <div className="bg-white">
             <div className="pt-6">
@@ -323,7 +330,7 @@ export default function ProductPage({ create }) {
                                             onClick={changeSize}
                                             data-index={index}
                                         >
-                                            {size.name}
+                                            {getSizeValue(size.name)}
                                         </button>
                                     ))}
                                 </div>
@@ -367,6 +374,25 @@ export default function ProductPage({ create }) {
                                         id="slug"
                                         className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                                         placeholder="Slug"
+                                    />
+                                </div>
+                            </div>
+                            <div className="slug">
+                                <label
+                                    htmlFor="designID"
+                                    className="block text-sm font-medium text-gray-700 mt-4"
+                                >
+                                    Design ID
+                                </label>
+                                <div className="mt-1">
+                                    <input
+                                        onChange={changeInput}
+                                        value={product.designID}
+                                        type="text"
+                                        name="designID"
+                                        id="designID"
+                                        className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                        placeholder="Design Number"
                                     />
                                 </div>
                             </div>
