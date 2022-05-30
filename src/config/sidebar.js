@@ -1,6 +1,6 @@
 import React from "react";
-import { HomeIcon } from "@heroicons/react/outline";
-import { CREATE_PRODUCT, HOME, LIST_PRODUCTS, STOCK_LIST } from "@routes/path";
+import { HomeIcon,PhotographIcon } from "@heroicons/react/outline";
+import {CREATE_PRODUCT, GALLERY, HOME, LIST_PRODUCTS, STOCK_LIST} from "@routes/path";
 import { Box, List, PlusCircle } from "react-feather";
 
 export default [
@@ -29,4 +29,5 @@ export default [
             },
         ],
     },
+    {name:"Gallery", href:GALLERY,icon:PhotographIcon }
 ];

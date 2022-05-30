@@ -4,12 +4,13 @@ import ProductPage from "@/Products/ProductPage";
 import StockList from "@/Products/StockList";
 
 import {
-    CREATE_PRODUCT,
+    CREATE_PRODUCT, GALLERY,
     HOME,
     LIST_PRODUCTS,
     PRODUCT_PAGE,
     STOCK_LIST,
 } from "./path";
+import Gallery from "@/Gallery";
 
 export default [
     {
@@ -35,4 +36,8 @@ export default [
         route: STOCK_LIST,
         component: StockList,
     },
+    {
+        route: GALLERY,
+        component: Gallery
+    }
 ];
