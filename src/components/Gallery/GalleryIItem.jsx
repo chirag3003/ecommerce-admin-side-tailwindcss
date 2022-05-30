@@ -6,18 +6,20 @@ import Qrcode from "qrcode"
 
 function GalleryIItem({image}) {
     const [qrURL,setQrURL] = useState("")
-     useEffect(() => Qrcode.toDataURL(image.imageUrl, {
+     useEffect(() => Qrcode.toDataURL(image.src, {
          name:image.name,
          fileName:"Chi"
      },function (err, url) {
          setQrURL(url)
      }))
+
+
     return (
         <li >
             <div className="space-y-4">
-                <a href={image.imageUrl} target={"_blank"}>
+                <a href={image.src} target={"_blank"}>
                     <div className="aspect-w-3 aspect-h-2">
-                        <img className="object-cover shadow-lg rounded-lg" src={image.imageUrl} alt="" />
+                        <img className="object-cover shadow-lg rounded-lg" src={image.src} alt="" />
                     </div>
                 </a>
 
