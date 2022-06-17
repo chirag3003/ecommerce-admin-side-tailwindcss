@@ -3,16 +3,12 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 
 function Design({ designID, image }) {
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(false);
     return (
         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
             <button onClick={() => setOpen(true)}>{designID}</button>
             <Transition.Root show={open} as={Fragment}>
-                <Dialog
-                    as="div"
-                    className="fixed z-10 inset-0 overflow-y-auto"
-                    onClose={setOpen}
-                >
+                <Dialog as="div" className="fixed z-10 inset-0 overflow-y-auto" onClose={setOpen}>
                     <div className="flex items-end justify-center min-h-screen pt-4 px-2 pb-20 text-center sm:block sm:p-0">
                         <Transition.Child
                             as={Fragment}
@@ -50,10 +46,7 @@ function Design({ designID, image }) {
                                         onClick={() => setOpen(false)}
                                     >
                                         <span className="sr-only">Close</span>
-                                        <XIcon
-                                            className="h-6 w-6"
-                                            aria-hidden="true"
-                                        />
+                                        <XIcon className="h-6 w-6" aria-hidden="true" />
                                     </button>
                                 </div>
                                 <div className="sm:flex sm:items-start">
