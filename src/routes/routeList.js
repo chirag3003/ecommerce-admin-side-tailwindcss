@@ -6,11 +6,12 @@ import StockList from "@/Products/StockList";
 import {
     CREATE_PRODUCT, GALLERY,
     HOME,
-    LIST_PRODUCTS,
+    LIST_PRODUCTS, ORDERS,
     PRODUCT_PAGE,
     STOCK_LIST,
 } from "./path";
 import Gallery from "@/Gallery";
+import Orders from "@/Orders";
 
 export default [
     {
@@ -39,5 +40,9 @@ export default [
     {
         route: GALLERY,
         component: Gallery
+    },
+    {
+        route:ORDERS,
+        component:Orders
     }
 ];

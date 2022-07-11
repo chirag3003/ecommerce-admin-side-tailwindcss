@@ -1,7 +1,7 @@
 import React from "react";
-import { HomeIcon,PhotographIcon } from "@heroicons/react/outline";
-import {CREATE_PRODUCT, GALLERY, HOME, LIST_PRODUCTS, STOCK_LIST} from "@routes/path";
-import { Box, List, PlusCircle } from "react-feather";
+import { HomeIcon,PhotographIcon,CashIcon } from "@heroicons/react/outline";
+import {CREATE_PRODUCT, GALLERY, HOME, LIST_PRODUCTS, ORDERS, STOCK_LIST} from "@routes/path";
+import { Box, List, PlusCircle, } from "react-feather";
 
 export default [
     { name: "Dashboard", href: HOME, icon: HomeIcon, current: true },
@@ -29,5 +29,10 @@ export default [
             },
         ],
     },
-    {name:"Gallery", href:GALLERY,icon:PhotographIcon }
+    {name:"Gallery", href:GALLERY,icon:PhotographIcon },
+    {
+        name:"Orders",
+        href: ORDERS,
+        icon:CashIcon
+    }
 ];

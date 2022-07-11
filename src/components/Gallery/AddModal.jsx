@@ -161,16 +161,12 @@ export default function AddModal({ open, setOpen }) {
                         </form>
                     </Transition.Child>
                 </div>
-                {/* <ErrorRequestAlert
-                    open={errorOpen}
-                    setOpen={setErrorOpen}
-                    message={"Name already in use"}
-                /> */}
                 <SuccessfulRequestAlert
                     open={successOpen}
                     setOpen={setSuccessOpen}
-                    message={"Image added  succesfully "}
+                    message={"Image added  successfully "}
                 />
+                <ErrorRequestAlert open={errorOpen} setOpen={setErrorOpen} message={"An image with the name already exists"}/>
             </Dialog>
         </Transition.Root>
     );
